@@ -17,9 +17,9 @@ module.exports = function (app) {
             });
     });
 
-    app.get("/api/workouts/:id", function (req, res) {
+    app.put("/api/workouts/:id", function (req, res) {
         //MongoDB to show specific workout
-        db.Workout.findById(id)
+        db.Workout.findById(req.params.id)
             .then(dbWorkout => {
                 res.json(dbWorkout);
             })
