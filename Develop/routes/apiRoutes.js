@@ -17,15 +17,30 @@ module.exports = function (app) {
             });
     });
 
-    app.put("/api/workouts/:id", function (req, res) {
+    // app.put("/api/workouts/:id", function (req, res) {
+        
+    //     console.log(req.body);
+    //     db.Workout.findByIdAndUpdate(req.params.id)
+    //         .then(dbWorkout => {
+    //             res.json(dbWorkout);
+    //         })
+    //         .catch(err => {
+    //             res.json(err);
+    //         });
+    // });
+
+    app.put("/api/workouts/:id", (req, res) => {
         //MongoDB to show specific workout
-        db.Workout.findById(req.params.id)
-            .then(dbWorkout => {
-                res.json(dbWorkout);
+        var currWorkoutId = req.params.id;
+        console.log(currWorkoutId);
+        var newExercise = req.body;
+        console.log(newExercise);
+        db.Workout.findOneAndUpdate({
+            _id: currWorkoutId
+        }, { $push: { exercises: newExercise } }, { new: true })
+            .then(update => {
+                res.json(update);
             })
-            .catch(err => {
-                res.json(err);
-            });
     });
 
     app.post("/api/workouts", function (req, res) {
@@ -34,6 +49,17 @@ module.exports = function (app) {
         db.Workout.insert(req.body)
             .then(newWorkout => {
                 res.json(newWorkout);
+            })
+            .catch(err => {
+                res.json(err);
+            });
+    });
+
+    app.get("/api/workouts/range", function (req, res) {
+     
+        db.Workout.find({})
+            .then(dbWorkout => {
+                res.json(dbWorkout);
             })
             .catch(err => {
                 res.json(err);
